@@ -4,7 +4,7 @@ import pybullet_data
 import time
 import numpy as np
 
-iterations = 200 #number of iterations in the loop
+iterations = 100 #number of iterations in the loop
 
 physicsClient = p.connect(p.GUI)
 
@@ -25,5 +25,5 @@ for i in range(iterations):
     backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("BackLeg")
     time.sleep(1.0/60)
 
-print(backLegSensorValues)
+np.save('data/backLegSensorValues.npy',backLegSensorValues)
 p.disconnect()
