@@ -4,7 +4,7 @@ import pybullet_data
 import time
 import numpy as np
 
-iterations = 100 #number of iterations in the loop
+iterations = 1000 #number of iterations in the loop
 
 physicsClient = p.connect(p.GUI)
 
@@ -23,8 +23,18 @@ frontLegSensorValues = np.zeros(iterations)
 
 for i in range(iterations):
     p.stepSimulation()
+
+    ####sensors
     backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("BackLeg")
     frontLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("FrontLeg")
+
+    ##motors
+    pyrosim.Set_Motor_For_Joint(bodyIndex = robotId,
+    jointName = b'Torso_BackLeg',
+    controlMode = p.POSITION_CONTROL,
+    targetPosition = 0,
+    maxForce = 500)
+
     time.sleep(1.0/60)
 
 np.save('data/backLegSensorValues.npy',backLegSensorValues)
