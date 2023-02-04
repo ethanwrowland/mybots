@@ -3,8 +3,21 @@ import pyrosim.pyrosim as pyrosim
 import pybullet_data
 import time
 import numpy as np
+import math
+import random
 
+pi=math.pi
 iterations = 1000 #number of iterations in the loop
+timeScale = 1 #numerator in the sleep function
+
+targetAngles = np.zeros(1000)
+print(targetAngles)
+for i in range(0,1000):
+    targetAngles[i] = i*(pi/500)
+targetAngles = (pi/4)*np.sin(targetAngles)
+print(targetAngles)
+np.save('data/targetAngles.npy',targetAngles)
+exit()
 
 physicsClient = p.connect(p.GUI)
 
@@ -32,10 +45,17 @@ for i in range(iterations):
     pyrosim.Set_Motor_For_Joint(bodyIndex = robotId,
     jointName = b'Torso_BackLeg',
     controlMode = p.POSITION_CONTROL,
-    targetPosition = 0,
-    maxForce = 500)
+    targetPosition = (pi)*random.random()-(pi/2),
+    maxForce = 15)
+    pyrosim.Set_Motor_For_Joint(bodyIndex = robotId,
+    jointName = b'Torso_FrontLeg',
+    controlMode = p.POSITION_CONTROL,
+    targetPosition = (pi)*random.random()-(pi/2),
+    maxForce = 15)
 
-    time.sleep(1.0/60)
+
+
+    time.sleep(timeScale/60)
 
 np.save('data/backLegSensorValues.npy',backLegSensorValues)
 np.save('data/frontLegSensorValues.npy',frontLegSensorValues)
