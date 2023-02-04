@@ -7,10 +7,10 @@ frontLegSensorValues = np.load('data/frontLegSensorValues.npy')
 print("back: ", backLegSensorValues)
 print("front: ",frontLegSensorValues)
 
-plt.plot(backLegSensorValues)
-print("check1")
-plt.plot(frontLegSensorValues)
-print("check2")
+plt.plot(backLegSensorValues, label = 'back leg', linewidth = 4)
+plt.plot(frontLegSensorValues, label = 'front leg')
+
+plt.legend()
 plt.show()
 
 
