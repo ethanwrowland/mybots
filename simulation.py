@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 pi=math.pi
 iterations = 1000 #number of iterations in the loop
-timeScale = .005 #numerator in the sleep function
+timeScale = .01 #numerator in the sleep function
 
 amplitudeBack = pi/8
 frequencyBack = 20
