@@ -3,7 +3,12 @@ import math
 
 pi=math.pi
 iterations = 1000 #number of iterations in the loop
-timeScale = .01 #numerator in the sleep function
+timeScale = .1 #numerator in the sleep function
+
+amplitude = pi/8
+frequency = 20
+offset = 0
+maxForce = 20
 
 amplitudeBack = pi/8
 frequencyBack = 20
