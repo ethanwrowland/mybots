@@ -8,9 +8,10 @@ import random
 import matplotlib.pyplot as plt
 import constants as c
 from simulation import SIMULATION
+from time import sleep
 
 simulation = SIMULATION()
-
+sleep(5)
 simulation.Run()
 
 
