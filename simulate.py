@@ -9,14 +9,17 @@ import matplotlib.pyplot as plt
 import constants as c
 from simulation import SIMULATION
 from time import sleep
+import sys
 
-simulation = SIMULATION()
-sleep(5)
+directOrGUI = sys.argv[1]
+
+simulation = SIMULATION(directOrGUI)
 simulation.Run()
 
 
 
 # np.save('data/backLegSensorValues.npy',backLegSensorValues)
 # np.save('data/frontLegSensorValues.npy',frontLegSensorValues)
+simulation.Get_Fitness()
 
 simulation.__del__()

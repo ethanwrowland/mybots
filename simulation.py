@@ -13,9 +13,14 @@ from motor import MOTOR
 from sensor import SENSOR
 
 class SIMULATION:
-    def __init__(self):
-        
-        self.physicsClient = p.connect(p.GUI)
+    def __init__(self, directOrGUI):
+        if(directOrGUI == "DIRECT"):
+            self.physicsClient = p.connect(p.DIRECT)
+        elif(directOrGUI == "GUI"):
+            self.physicsClient = p.connect(p.GUI)
+        else:
+            print("error with the direct/gui bit")
+            exit()
         p.configureDebugVisualizer(p.COV_ENABLE_GUI,0)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0,0,-9.8)
@@ -33,7 +38,11 @@ class SIMULATION:
 
             time.sleep(c.timeScale/60)
 
+    def Get_Fitness(self):
+        self.robot.Get_Fitness()
+
     def __del__(self):
-        for s in self.robot.sensors.values():
-            s.Save_Values()
-        p.disconnect()
+        #for s in self.robot.sensors.values():
+            #s.Save_Values()
+        #p.disconnect()
+        pass

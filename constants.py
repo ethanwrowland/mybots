@@ -2,8 +2,9 @@ import math
 
 
 pi=math.pi
-iterations = 10000 #number of iterations in the loop
-timeScale = .3 #numerator in the sleep function
+iterations = 6000 #number of iterations in the loop
+timeScale = .1 #numerator in the sleep function
+numberOfGenerations = 250
 
 amplitude = pi/8
 frequency = 20
