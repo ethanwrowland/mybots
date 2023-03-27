@@ -2,29 +2,44 @@ import os
 import numpy as np
 import pyrosim.pyrosim as pyrosim
 import random
+import os
+import time
 
 class SOLUTION:
-    def __init__(self):
+    def __init__(self, id):
         self.weights = np.random.rand(3,2)
         #print(self.weights)
         self.weights = self.weights * 2 - 1
         #print(self.weights)
+        self.myID = id
 
-    def Evaluate(self, dirOrGUI):
+    def Start_Simulation(self, dirOrGUI):
         self.Create_World()
         self.Create_Body()
         self.Create_Brain()
-        os.system("python3 simulate.py "+dirOrGUI)
-       
-        fitnessFile = "fitness.txt"
-        f = open(fitnessFile, "r")
+        os.system("python3 simulate.py " + dirOrGUI + " " + str(self.myID) + " &")
+    
+    def Wait_For_Simulation_To_End(self):
+        fitnessFileName = "fitness" + str(self.myID) + ".txt"
+        while not os.path.exists(fitnessFileName):
+            time.sleep(0.01)
+        time.sleep(0.1)
+        f = open(fitnessFileName, "r")
         self.fitness = float(f.read())
+        print("fitness for:", str(self.myID), ":", str(self.fitness))
         f.close
 
+        sysCallText = "rm fitness" + str(self.myID) + ".txt"
+        #print(sysCallText)
+        os.system(sysCallText)
+
+
+    def Get_Fitness(self):
+        print(self.fitness)
+        return self.fitness
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
-        pyrosim.Send_Cube(name=("Box"), pos=[-10,0,.5] , size=[1,1,1])
         pyrosim.End()
 
 
@@ -42,7 +57,7 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Brain(self):
-        pyrosim.Start_NeuralNetwork("brain.nndf")
+        pyrosim.Start_NeuralNetwork("brain" + str(self.myID) + ".nndf")
 
         pyrosim.Send_Sensor_Neuron(name = 0 , linkName = "Torso")
         pyrosim.Send_Sensor_Neuron(name = 1 , linkName = "FrontLeg")
@@ -62,3 +77,9 @@ class SOLUTION:
         randomRow = random.randint(0,2)
         randomCol = random.randint(0,1)
         self.weights[randomRow][randomCol] = random.random() * 2 - 1
+
+    def Set_ID(self, id):
+        self.myID = id
+
+    def Print(self):
+        print("solution id:", str(self.myID), "fitness:", str(self.fitness))

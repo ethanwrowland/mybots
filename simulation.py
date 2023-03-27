@@ -13,7 +13,7 @@ from motor import MOTOR
 from sensor import SENSOR
 
 class SIMULATION:
-    def __init__(self, directOrGUI):
+    def __init__(self, directOrGUI, solutionID):
         if(directOrGUI == "DIRECT"):
             self.physicsClient = p.connect(p.DIRECT)
         elif(directOrGUI == "GUI"):
@@ -26,7 +26,7 @@ class SIMULATION:
         p.setGravity(0,0,-9.8)
 
         self.world = WORLD()
-        self.robot = ROBOT()
+        self.robot = ROBOT(solutionID)
     
     def Run(self):
         for t in range(c.iterations):
