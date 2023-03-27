@@ -4,8 +4,8 @@ import math
 pi=math.pi
 iterations = 1000 #number of iterations in the loop
 timeScale = .1 #numerator in the sleep function
-numberOfGenerations = 10
-populationSize = 10
+numberOfGenerations = 5
+populationSize = 5
 
 amplitude = pi/8
 frequency = 20
