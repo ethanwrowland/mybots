@@ -9,9 +9,7 @@ import constants as c
 class SOLUTION:
     def __init__(self, id):
         self.weights = np.random.rand(c.numSensorNeurons,c.numMotorNeurons)
-        #print(self.weights)
         self.weights = self.weights * 2 - 1
-        #print(self.weights)
         self.myID = id
 
     def Start_Simulation(self, dirOrGUI, toDelete):
