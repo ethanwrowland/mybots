@@ -74,13 +74,13 @@ class PARALLEL_HILL_CLIMBER:
             if (self.parents[p].fitness < mostFitScore):
                 mostFitScore = self.parents[p].fitness
                 mostFitSpot = p
-        self.parents[mostFitSpot].Start_Simulation("GUI")
-        self.parents[mostFitSpot].Wait_For_Simulation_To_End()
+        self.parents[mostFitSpot].Start_Simulation("GUI", False)
+        self.parents[mostFitSpot].Wait_For_Simulation_To_End(False)
 
     def Evaluate(self, solutions):
         for s in solutions:
-            solutions[s].Start_Simulation("DIRECT")
+            solutions[s].Start_Simulation("DIRECT", True)
         for s in solutions:
-            solutions[s].Wait_For_Simulation_To_End()
+            solutions[s].Wait_For_Simulation_To_End(True)
     
         

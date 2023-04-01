@@ -14,15 +14,24 @@ import os
 
 
 class ROBOT:
-    def __init__(self, solutionID):
+    def __init__(self, solutionID, toDelete):
         self.robotId = p.loadURDF("body.urdf")
         pyrosim.Prepare_To_Simulate(self.robotId)
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
         brainFilename = "brain" + solutionID + ".nndf"
         self.nn = NEURAL_NETWORK(brainFilename)
-        rmcall = "rm " +brainFilename
-        os.system(rmcall)
+
+        #f = open("robotTest.txt", "a")
+       # f.write("solutionID: " + str(solutionID) + " to delete: " + str(toDelete) + "\n")
+        #f.close() 
+
+        if(toDelete == "True"):
+            #f = open("robotTest.txt", "a")
+            rmcall = "rm " +brainFilename
+            os.system(rmcall)
+            #f.write(rmcall + "\n")
+            #f.close()
         self.myID = solutionID
 
 
@@ -48,7 +57,7 @@ class ROBOT:
                 desiredAngle = self.nn.Get_Value_Of(neuronName)
                 #print(neuronName + " " +jointName+" " +str(desiredAngle))
                 jointNameRevised = bytes(jointName, 'utf-8')
-                self.motors[jointNameRevised].Set_Value(desiredAngle, self.robotId)
+                self.motors[jointNameRevised].Set_Value(c.motorJointRange * desiredAngle, self.robotId)
     
     def Think(self):
         self.nn.Update()

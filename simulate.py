@@ -13,8 +13,12 @@ import sys
 
 directOrGUI = sys.argv[1]
 solutionID = sys.argv[2]
+toDelete = sys.argv[3]
 
-simulation = SIMULATION(directOrGUI, solutionID)
+print("to delete: " + str(toDelete))
+print(type(toDelete))
+
+simulation = SIMULATION(directOrGUI, solutionID, toDelete)
 simulation.Run()
 
 
