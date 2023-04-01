@@ -54,7 +54,7 @@ class PARALLEL_HILL_CLIMBER:
         #print("child fitness" + str(self.child.fitness))
         
         for p in self.parents:
-            if(self.parents[p].fitness > self.children[p].fitness):
+            if(self.parents[p].fitness < self.children[p].fitness):
                 self.parents[p] = self.children[p]
 
     def Print(self):
@@ -71,7 +71,7 @@ class PARALLEL_HILL_CLIMBER:
         mostFitScore = self.parents[0].fitness
         mostFitSpot = 0
         for p in self.parents:
-            if (self.parents[p].fitness < mostFitScore):
+            if (self.parents[p].fitness > mostFitScore):
                 mostFitScore = self.parents[p].fitness
                 mostFitSpot = p
         self.parents[mostFitSpot].Start_Simulation("GUI", False)

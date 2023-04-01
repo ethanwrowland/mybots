@@ -17,29 +17,32 @@ class ROBOT:
     def __init__(self, solutionID, toDelete):
         self.robotId = p.loadURDF("body.urdf")
         pyrosim.Prepare_To_Simulate(self.robotId)
-        self.Prepare_To_Sense()
-        self.Prepare_To_Act()
         brainFilename = "brain" + solutionID + ".nndf"
         self.nn = NEURAL_NETWORK(brainFilename)
-
-        #f = open("robotTest.txt", "a")
-       # f.write("solutionID: " + str(solutionID) + " to delete: " + str(toDelete) + "\n")
-        #f.close() 
+        self.Prepare_To_Sense()
+        self.Prepare_To_Act()
+        self.offGround = np.zeros(c.iterations)
 
         if(toDelete == "True"):
-            #f = open("robotTest.txt", "a")
             rmcall = "rm " +brainFilename
             os.system(rmcall)
-            #f.write(rmcall + "\n")
-            #f.close()
         self.myID = solutionID
+
+        #f = open("robotTest.txt", "w")
+        #f.close()
+        self.solutionId = solutionID
 
 
     def Prepare_To_Sense(self):
         self.sensors = {}
-        for linkName in pyrosim.linkNamesToIndices:
-            self.sensors[linkName] = SENSOR(linkName)
-        #print(self.sensors)
+        index = 0
+        for neuronName in self.nn.Get_Neuron_Names():
+            if self.nn.Is_Sensor_Neuron(neuronName):
+                self.sensors[index] = neuronName
+                index += 1
+        # f = open("sensorFile.txt" , "w")
+        # f.write(str(self.sensors))
+        # f.close
 
     def Prepare_To_Act(self):
         self.motors = {}
@@ -47,8 +50,24 @@ class ROBOT:
             self.motors[jointName] = MOTOR(jointName)
 
     def Sense(self, t):
+        #f=open("robotTest.txt","a")
+        miniSum = 0
         for s in self.sensors.values():
-            s.Get_Value(t)
+            miniSum += self.nn.Get_Value_Of(s)
+            #f.write(str(self.nn.Get_Value_Of(s)) + "\t")
+        
+        if(miniSum == -4):
+            self.offGround[t] = 1
+        else:
+            self.offGround[t] = -1
+        
+        #f.write(" miniSum: " + str(miniSum) + "\n")
+        #f.close()
+
+        #save to external file
+        #np.save("offGround" + str(self.solutionId), self.offGround)
+        
+
 
     def Act(self, t):
         for neuronName in self.nn.Get_Neuron_Names():
@@ -64,19 +83,39 @@ class ROBOT:
         #self.nn.Print()
     
     def Get_Fitness(self):
-        basePositionAndOrientation = p.getBasePositionAndOrientation(self.robot)
-        basePosition = basePositionAndOrientation[0]
-        xPosition = basePosition[0]
+        #basePositionAndOrientation = p.getBasePositionAndOrientation(self.robotId)
+        #basePosition = basePositionAndOrientation[0]
+        #xPosition = basePosition[0]
 
+        #jumping fitness function... aim to max fitness
+        moreOffThanOn = np.sum(self.offGround) #between 0 and c.iterations
+        longestHangTime = self.Longest_Hangtime()
+
+        overallFitness = moreOffThanOn + c.hangTimeFactor*longestHangTime
 
         outFileName = "tmp"+str(self.myID) + ".txt"
         f = open(outFileName, "w")
-        f.write(str(xPosition))
+        f.write(str(overallFitness))
         osCall = "mv tmp" + str(self.myID) + ".txt fitness" + str(self.myID) + ".txt"
         os.system(osCall)
         f.close()  
 
         exit()
 
+    def Longest_Hangtime(self):
+        curr = 0
+        max = 0
+        for t in self.offGround:
+            if(t==1):
+                curr += 1
+            else:
+                curr = 0
+
+            if(curr > max):
+                max = curr
+
+        if(max == 0):
+            max = .001
+        return max
 
 
