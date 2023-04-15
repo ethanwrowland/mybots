@@ -90,8 +90,9 @@ class ROBOT:
         #jumping fitness function... aim to max fitness
         moreOffThanOn = np.sum(self.offGround) #between 0 and c.iterations
         longestHangTime = self.Longest_Hangtime()
+        disp = self.Total_Disp()
 
-        overallFitness = moreOffThanOn + c.hangTimeFactor*longestHangTime
+        overallFitness = moreOffThanOn + c.hangTimeFactor*longestHangTime + c.dispFactor*disp
 
         outFileName = "tmp"+str(self.myID) + ".txt"
         f = open(outFileName, "w")
@@ -117,5 +118,13 @@ class ROBOT:
         if(max == 0):
             max = .001
         return max
+    
+    def Total_Disp(self):
+        basePositionAndOrientation = p.getBasePositionAndOrientation(self.robotId)
+        basePosition = basePositionAndOrientation[0]
+        x = basePosition[0]
+        y = basePosition[1]
+        r = (x*x + y*y)**.5
+        return r
 
 

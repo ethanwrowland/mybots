@@ -7,10 +7,19 @@ import time
 import constants as c
 
 class SOLUTION:
-    def __init__(self, id):
-        self.weights = np.random.rand(c.numSensorNeurons,c.numMotorNeurons)
-        self.weights = self.weights * 2 - 1
+    def __init__(self, id, symmetric):
         self.myID = id
+        self.symmetric = bool(symmetric)
+        if(not symmetric):
+            self.weights = np.random.rand(c.numSensorNeurons,c.numMotorNeurons)
+            self.weights = self.weights * 2 - 1
+        else:
+            #this is when it is symmetric
+            self.weights = np.random.rand(2, c.numMotorNeurons)
+            self.weights = self.weights * 2 - 1
+        
+
+        
 
     def Start_Simulation(self, dirOrGUI, toDelete):
         self.Create_World()
@@ -21,11 +30,11 @@ class SOLUTION:
     def Wait_For_Simulation_To_End(self, toDelete):
         fitnessFileName = "fitness" + str(self.myID) + ".txt"
         while not os.path.exists(fitnessFileName):
-            time.sleep(0.01)
-        time.sleep(0.1)
+            time.sleep(0.1)
+        time.sleep(0.5)
         f = open(fitnessFileName, "r")
         self.fitness = float(f.read())
-        print("fitness for:", str(self.myID), ":", str(self.fitness))
+        #print("fitness for:", str(self.myID), ":", str(self.fitness))
         f.close
         if(toDelete):
             sysCallText = "rm fitness" + str(self.myID) + ".txt"
@@ -88,25 +97,41 @@ class SOLUTION:
         pyrosim.Send_Sensor_Neuron(name = 3 , linkName = "LowerLeftLeg")
 
         #motors
-        pyrosim.Send_Motor_Neuron(name = 4 , jointName = "Torso_BackLeg")
-        pyrosim.Send_Motor_Neuron(name = 5 , jointName = "Torso_FrontLeg")
+        pyrosim.Send_Motor_Neuron(name = 4 , jointName = "Torso_FrontLeg")
+        pyrosim.Send_Motor_Neuron(name = 5 , jointName = "Torso_BackLeg")
         pyrosim.Send_Motor_Neuron(name = 6 , jointName = "Torso_RightLeg")
         pyrosim.Send_Motor_Neuron(name = 7 , jointName = "Torso_LeftLeg")
-        pyrosim.Send_Motor_Neuron(name = 7 , jointName = "FrontLeg_LowerFrontLeg")
-        pyrosim.Send_Motor_Neuron(name = 8 , jointName = "BackLeg_LowerBackLeg")
-        pyrosim.Send_Motor_Neuron(name = 9 , jointName = "RightLeg_LowerRightLeg")
-        pyrosim.Send_Motor_Neuron(name = 10 , jointName = "LeftLeg_LowerLeftLeg")
+        pyrosim.Send_Motor_Neuron(name = 8 , jointName = "FrontLeg_LowerFrontLeg")
+        pyrosim.Send_Motor_Neuron(name = 9 , jointName = "BackLeg_LowerBackLeg")
+        pyrosim.Send_Motor_Neuron(name = 10 , jointName = "RightLeg_LowerRightLeg")
+        pyrosim.Send_Motor_Neuron(name = 11 , jointName = "LeftLeg_LowerLeftLeg")
+        
+        if(not self.symmetric):
+            for currRow in range(c.numSensorNeurons):
+                for currCol in range(c.numMotorNeurons):
+                    pyrosim.Send_Synapse(sourceNeuronName = currRow , targetNeuronName = currCol + c.numSensorNeurons, weight = self.weights[currRow][currCol])
 
-        for currRow in range(c.numSensorNeurons):
-            for currCol in range(c.numMotorNeurons):
-                pyrosim.Send_Synapse( sourceNeuronName = currRow , targetNeuronName = currCol + c.numSensorNeurons , weight = self.weights[currRow][currCol])
-
-                #print(str(currRow) + str(currCol) + str(self.weights[currRow][currCol]))
+                    #print(str(currRow) + str(currCol) + str(self.weights[currRow][currCol]))
+        
+        else:
+            for row in [0,1]:
+                for col in range(c.numMotorNeurons):
+                    pyrosim.Send_Synapse(sourceNeuronName = row , targetNeuronName = col + c.numSensorNeurons, weight = self.weights[row][col])
+                    mni = c.numSensorNeurons + col
+                    #messy bc bilateral symmetry
+                    if(mni == 4 or mni == 5 or mni == 8 or mni ==9):
+                        pyrosim.Send_Synapse(sourceNeuronName = row + 2, targetNeuronName = col + c.numSensorNeurons + 2, weight = self.weights[row][col])
+                    else:
+                        pyrosim.Send_Synapse(sourceNeuronName = row + 2, targetNeuronName = col + c.numSensorNeurons - 2, weight = self.weights[row][col])  
 
         pyrosim.End()
 
     def Mutate(self):
-        randomRow = random.randint(0,c.numSensorNeurons-1)
+        if(not self.symmetric):
+            randomRow = random.randint(0,c.numSensorNeurons-1) #this won't work for symmetric case
+        else:
+            randomRow = random.randint(0,1)
+            
         randomCol = random.randint(0,c.numMotorNeurons-1)
         self.weights[randomRow][randomCol] = random.random() * 2 - 1
 

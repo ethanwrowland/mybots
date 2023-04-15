@@ -4,7 +4,7 @@ import copy
 import os
 
 class PARALLEL_HILL_CLIMBER:
-    def __init__(self):
+    def __init__(self, symmetric):
         #delete all the left over stuff
         idToDelete = 0
         fitnessFileName = "fitness" + str(idToDelete) +".txt"
@@ -15,13 +15,16 @@ class PARALLEL_HILL_CLIMBER:
         brainFileName = "brain" + str(idToDelete) +".nndf"
         while(os.path.exists(brainFileName)):
             os.system("rm " + brainFileName)
-            idToDelete +=1         
+            idToDelete +=1        
+
+        #create the symmetric var
+        self.symmetric = symmetric
 
         #create the initial population of parents
         self.nextAvailableID = 0
         self.parents = {}
         for i in range(c.populationSize):
-            self.parents[i] = SOLUTION(self.nextAvailableID)
+            self.parents[i] = SOLUTION(self.nextAvailableID, self.symmetric)
             self.nextAvailableID += 1
     
     def Evolve(self):
