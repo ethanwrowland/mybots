@@ -124,7 +124,8 @@ class ROBOT:
         basePosition = basePositionAndOrientation[0]
         x = basePosition[0]
         y = basePosition[1]
-        r = (x*x + y*y)**.5
-        return r
+        proj = (x+y) #encourage to walk along x=y line
+        posProj = (proj**2)**.5
+        return posProj
 
 

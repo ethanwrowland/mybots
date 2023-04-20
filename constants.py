@@ -2,18 +2,18 @@ import math
 
 
 pi=math.pi
-iterations = 1000 #number of iterations in the loop
-timeScale = .1 #numerator in the sleep function
-numberOfGenerations = 3
-populationSize = 1
+iterations = 1500 #number of iterations in the loop
+timeScale = .2 #numerator in the sleep function
+numberOfGenerations = 60
+populationSize = 60
 
 hangTimeFactor = 30.0
-dispFactor = 30
+dispFactor = 40.0
 
 numSensorNeurons = 4
 numMotorNeurons = 8
 
-motorJointRange = .4
+motorJointRange = .5
 
 amplitude = pi/8
 frequency = 20
