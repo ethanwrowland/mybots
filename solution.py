@@ -10,7 +10,7 @@ class SOLUTION:
     def __init__(self, id, symmetric):
         self.myID = id
         self.symmetric = bool(symmetric)
-        if(not symmetric):
+        if(not self.symmetric):
             self.weights = np.random.rand(c.numSensorNeurons,c.numMotorNeurons)
             self.weights = self.weights * 2 - 1
         else:

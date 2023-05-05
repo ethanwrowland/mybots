@@ -2,13 +2,13 @@ import math
 
 
 pi=math.pi
-iterations = 1500 #number of iterations in the loop
+iterations = 700 #number of iterations in the loop
 timeScale = .2 #numerator in the sleep function
-numberOfGenerations = 60
-populationSize = 60
+numberOfGenerations = 20
+populationSize = 20
 
 hangTimeFactor = 30.0
-dispFactor = 40.0
+dispFactor = 70.0
 
 numSensorNeurons = 4
 numMotorNeurons = 8

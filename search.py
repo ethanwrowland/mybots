@@ -5,7 +5,12 @@ import sys
 #os.system("python3 generate.py")
 #os.system("python3 simulate.py")
 
-symmetric = bool(sys.argv[1])
+if(sys.argv[1] == "true"):
+    print("symmetric from phc")
+    symmetric = True
+else:
+    print("non symmetric from phc")
+    symmetric = False
 
 phc = PARALLEL_HILL_CLIMBER(symmetric)
 

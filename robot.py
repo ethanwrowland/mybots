@@ -117,6 +117,10 @@ class ROBOT:
 
         if(max == 0):
             max = .001
+        
+        if(max > 250):
+            max = .001
+        
         return max
     
     def Total_Disp(self):

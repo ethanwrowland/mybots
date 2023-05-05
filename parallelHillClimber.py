@@ -5,6 +5,7 @@ import os
 
 class PARALLEL_HILL_CLIMBER:
     def __init__(self, symmetric):
+        
         #delete all the left over stuff
         idToDelete = 0
         fitnessFileName = "fitness" + str(idToDelete) +".txt"
@@ -17,7 +18,6 @@ class PARALLEL_HILL_CLIMBER:
             os.system("rm " + brainFileName)
             idToDelete +=1        
 
-        #create the symmetric var
         self.symmetric = symmetric
 
         #create the initial population of parents
