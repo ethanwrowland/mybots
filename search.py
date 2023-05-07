@@ -16,3 +16,5 @@ phc = PARALLEL_HILL_CLIMBER(symmetric)
 
 phc.Evolve()
 phc.Show_Best()
+phc.Write_Fitness_Vec()
+phc.Show_Fitness_Graph()

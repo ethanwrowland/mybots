@@ -92,7 +92,7 @@ class ROBOT:
         longestHangTime = self.Longest_Hangtime()
         disp = self.Total_Disp()
 
-        overallFitness = moreOffThanOn + c.hangTimeFactor*longestHangTime + c.dispFactor*disp
+        overallFitness = c.moreOffThanOnFactor*moreOffThanOn + c.hangTimeFactor*longestHangTime + c.dispFactor*disp
 
         outFileName = "tmp"+str(self.myID) + ".txt"
         f = open(outFileName, "w")
@@ -118,8 +118,8 @@ class ROBOT:
         if(max == 0):
             max = .001
         
-        if(max > 250):
-            max = .001
+        if(max > 150):
+            max = -1000
         
         return max
     
@@ -128,8 +128,7 @@ class ROBOT:
         basePosition = basePositionAndOrientation[0]
         x = basePosition[0]
         y = basePosition[1]
-        proj = (x+y) #encourage to walk along x=y line
-        posProj = (proj**2)**.5
-        return posProj
+        
+        return (x**2 + y**2)**.5
 
 
